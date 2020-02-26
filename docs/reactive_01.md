@@ -286,8 +286,118 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 
 <img src="../img/img_01_03.png" width="300" height="180"></br>
 
+추가적으로 비동기적으로 Event/Data를 보내는 경우를 생각해보자. Publisher가 Subscriber에게 Data를 보낼 때 스레드를 10개 생성해서 동시에 보내도 될까?(∵ Publisher의 작업 양이 많은 경우) Spec상으로는 불가능하다. Subscriber는 Sequential하게 데이터가 넘어올 것을 기대하고, 그것을 신경쓰지 않아도 된다(ex. forkJoin 불가능).
 
-1:30:50
+```java
+package toby.live.rs_01;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Flow.Publisher;
+import java.util.concurrent.Flow.Subscriber;
+import java.util.concurrent.Flow.Subscription;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+public class PubSub {
+    public static void main(String[] args) throws InterruptedException {
+        Iterable<Integer> iter = Arrays.asList(1, 2, 3, 4, 5);
+        ExecutorService es = Executors.newSingleThreadExecutor();
+
+        // Java9
+        Publisher p = new Publisher() {
+            @Override
+            public void subscribe(Subscriber subscriber) {
+                Iterator<Integer> it = iter.iterator();
+
+                subscriber.onSubscribe(new Subscription() {
+                    @Override
+                    public void request(long n) {
+                        es.execute(() -> {  // 진행 여부 및 결과 상관 없는 경우
+                            int i = 0;
+                            try {
+                                while (i++ < n) {
+                                    if (it.hasNext()) {
+                                        subscriber.onNext(it.next());
+                                    } else {
+                                        subscriber.onComplete();
+                                        break;
+                                    }
+                                }
+                            } catch (RuntimeException e) {
+                                subscriber.onError(e);
+                            }
+                        });
+                        /*
+                         * Future
+                         *  - 비동기 작업 결과/완료 여부 정보를 제공
+                         *  - 이 경우 event이므로 타입은 없으니 와일드 카드 사용
+                         *  - 중간에 cancel하는 경우 Future 통해 interrupt 가능
+                         */
+//                        Future<?> f = es.submit(() -> {   // 진행 상황 체크하고 싶은 경우
+//                            try {
+//                                while (n-- > 0) {
+//                                    if (it.hasNext()) {
+//                                        subscriber.onNext(it.next());
+//                                    } else {
+//                                        subscriber.onComplete();
+//                                        break;
+//                                    }
+//                                }
+//                            } catch (RuntimeException e) {
+//                                subscriber.onError(e);
+//                            }
+//                        });
+                    }
+
+                    @Override
+                    public void cancel() {
+
+                    }
+                });
+            }
+        };
+
+        Subscriber<Integer> s = new Subscriber<Integer>() {
+            Subscription subscription;
+
+            @Override
+            public void onSubscribe(Subscription subscription) {
+                System.out.println(Thread.currentThread().getName() + " onSubscribe");
+                this.subscription = subscription;
+                this.subscription.request(1);
+            }
+
+            @Override
+            public void onNext(Integer item) {
+                System.out.println(Thread.currentThread().getName() + " onNext " + item);
+                this.subscription.request(1);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("onError: " + throwable.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                System.out.println(Thread.currentThread().getName() + " onComplete");
+            }
+        };
+
+        p.subscribe(s);
+
+        es.awaitTermination(10, TimeUnit.HOURS);
+        es.shutdown();
+    }
+}
+```
+
+실행 결과는 아래와 같다.
+
+<img src="../img/img_01_05.png" width="250" height="170"></br>
 
 - - -
 * The Reactive Streams Contract  
@@ -312,6 +422,10 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 		}
 	});
 	```
+* 자유 변수
+	* 람다 표현식 외부에 있는 변수를 람다가 사용할 경우 해당 변수를 자유 변수라 부름  
+		<img src="../img/img_01_04.png" width="600" height="300"></br>
+	* 람다식에서 자유 변수를 허용할 수 없는 이유는 스레드 한정을 위반하기 때문
 
 ##### [목차로 이동](#목차)
 
@@ -319,12 +433,15 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 * [ReactiveX](http://reactivex.io/)
 * [Reactive Streams](http://www.reactive-streams.org/)
 
-스프링이 구현하고 있는 Reactive Web이라는 기술이 Reactive Streams(표준)에 바탕을 두고 있다.
+스프링이 구현하고 있는 Reactive Web이라는 기술이 Reactive Streams(표준)에 바탕을 두고 있다. 다음에는 이를 바탕으로 스프링 5.0의 엔진으로 사용되고 있는 Reactor와 RxJava, 두 가지 구현을 살펴본다. 사실 이런 류의 것들은 워낙 미리 만들어진 것들이 많아서 쉽게 쓸 수 있고, 위의 코드 같은 것도 몰라도 된다(∵ 비즈니스 로직 코드와 스레드 등의 코드가 혼합).
 
 ##### [목차로 이동](#목차)
 
 ## 참고
 * [RxJava를 활용한 리액티브 프로그래밍](https://blog.insightbook.co.kr/2017/04/20/rxjava%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%EB%A6%AC%EC%95%A1%ED%8B%B0%EB%B8%8C-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-rxjava%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%82%AC%EC%9A%A9%EB%B2%95/)
 * [웹 프론트엔드 개발자의 얕고 넓은 Rx 이야기](https://www.slideshare.net/jeokrang/rx-70197043)
+* [병렬 데이터 처리와 성능](https://black9p.github.io/2018/01/20/%EB%B3%91%EB%A0%AC-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%B2%98%EB%A6%AC%EC%99%80-%EC%84%B1%EB%8A%A5/)
+* [쓰레드풀과 ForkJoinPool](https://okky.kr/article/345720)
+* 기타 언급: akka, grpc
 
 ##### [목차로 이동](#목차)
