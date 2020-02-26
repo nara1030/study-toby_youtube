@@ -19,10 +19,18 @@ import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class PubSub {
     public static void main(String[] args) {
         // 지난 주(JAVA9)와 다른 Publisher API 사용(∴ JAVA8에서도 사용 가능)
         Publisher<Integer> pub = new Publisher<Integer>() {
+            // Publisher의 Data Source
+            Iterable<Integer> iter = Stream.iterate(1, a -> a + 1)
+                    .limit(10)
+                    .collect(Collectors.toList());
+
             @Override
             public void subscribe(Subscriber<? super Integer> sub) {
                 // Spec에 따르면 subscribe을 호출하면 DATA를 보내야 하는데,
@@ -30,7 +38,12 @@ public class PubSub {
                 sub.onSubscribe(new Subscription() {
                     @Override
                     public void request(long n) {
-
+                        try {
+                            iter.forEach(s -> sub.onNext(s));
+                            sub.onComplete();   // Reactive에서 빠드리면 안되는 것!
+                        } catch (Throwable t) {
+                            sub.onError(t);
+                        }
                     }
 
                     @Override
@@ -44,7 +57,7 @@ public class PubSub {
         Subscriber<Integer> sub = new Subscriber<Integer>() {
             @Override
             public void onSubscribe(Subscription s) {
-
+                s.request(Long.MAX_VALUE);  // 무제한 데이터 받기
             }
 
             @Override
@@ -68,7 +81,7 @@ public class PubSub {
 }
 ```
 
-11:30
+16:50
 
 - - -
 * [Reactive Streams 의존성 추가](https://mvnrepository.com/artifact/org.reactivestreams/reactive-streams/1.0.0)
