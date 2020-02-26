@@ -33,7 +33,7 @@ Reactive Streams
 	 * public interface List<E> extends Collection<E> { }
 	 * public interface Collection<E> extends Iterable<E> { }
 	 * public interface Iterable<T> {
-	 * 	- Implementing this interface allows an object to be the target
+	 * - Implementing this interface allows an object to be the target
 	 *    of the "for-each loop" statement(since 1.5).
 	 *  - 즉, 컬렉션이 아니더라도 이 인터페이스를 구현한 데이터를 가진
 	 *    객체가 있다면 for-each 구문 사용 가능
@@ -84,7 +84,7 @@ Reactive Streams
 	}
 	```
 
-#####[목차로 이동](#목차)
+##### [목차로 이동](#목차)
 
 ### Observable
 * 하나의 스레드(main) 내에서 동작  
@@ -161,9 +161,9 @@ Reactive Streams
 
 참고로 실행 결과는 아래와 같다.
 
-<img src="../img/img_01_01.png" width="300" height="150"></br>
+<img src="../img/img_01_01.png" width="300" height="180"></br>
 
-#####[목차로 이동](#목차)
+##### [목차로 이동](#목차)
 
 ## Observer Pattern
 Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 패턴에 대해 두 가지 지적을 했다.
@@ -173,10 +173,10 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 
 55:00
 
-#####[목차로 이동](#목차)
+##### [목차로 이동](#목차)
 
 ## 참고
 * [RxJava를 활용한 리액티브 프로그래밍](https://blog.insightbook.co.kr/2017/04/20/rxjava%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%EB%A6%AC%EC%95%A1%ED%8B%B0%EB%B8%8C-%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%98%EB%B0%8D-rxjava%EC%9D%98-%EA%B0%9C%EB%85%90%EA%B3%BC-%EC%82%AC%EC%9A%A9%EB%B2%95/)
 * [웹 프론트엔드 개발자의 얕고 넓은 Rx 이야기](https://www.slideshare.net/jeokrang/rx-70197043)
 
-#####[목차로 이동](#목차)
+##### [목차로 이동](#목차)
