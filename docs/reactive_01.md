@@ -4,6 +4,10 @@ Reactive Streams
 	* Duality
 	* Observer Pattern(ex. Listener)
 	* Reactive Streams - 표준 - Java9 API
+		* Protocol  
+		```
+		onSubscribe onNext* (onError | onComplete)?
+		```
 * [강의 링크](https://www.youtube.com/watch?v=8fenTR3KOJo): 26/11/2016
 * [HomoEfficio님 코드](https://github.com/HomoEfficio/toby-spring-tv)
 - - -
@@ -13,6 +17,7 @@ Reactive Streams
 	* [Observable](#Observable)
 2. [Observer Pattern](#Observer-Pattern)
 3. [Reactive Streams](#Reactive-streams)
+	* [API Components](#API-Components)
 4. [참고](#참고)
 
 ## Duality
@@ -423,9 +428,9 @@ public class PubSub {
 	});
 	```
 * 자유 변수
-	* 람다 표현식 외부에 있는 변수를 람다가 사용할 경우 해당 변수를 자유 변수라 부름  
+	* 람다 표현식 외부에 있는 변수를 람다가 사용할 경우 해당 변수를 자유 변수라 부름
+	* 람다식에서 자유 변수를 허용할 수 없는 이유는 스레드 한정을 위반하기 때문  
 		<img src="../img/img_01_04.png" width="600" height="300"></br>
-	* 람다식에서 자유 변수를 허용할 수 없는 이유는 스레드 한정을 위반하기 때문
 
 ##### [목차로 이동](#목차)
 
@@ -434,6 +439,29 @@ public class PubSub {
 * [Reactive Streams](http://www.reactive-streams.org/)
 
 스프링이 구현하고 있는 Reactive Web이라는 기술이 Reactive Streams(표준)에 바탕을 두고 있다. 다음에는 이를 바탕으로 스프링 5.0의 엔진으로 사용되고 있는 Reactor와 RxJava, 두 가지 구현을 살펴본다. 사실 이런 류의 것들은 워낙 미리 만들어진 것들이 많아서 쉽게 쓸 수 있고, 위의 코드 같은 것도 몰라도 된다(∵ 비즈니스 로직 코드와 스레드 등의 코드가 혼합).
+
+##### [목차로 이동](#목차)
+
+### API Components
+다음 [문서](https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.3)에서 발췌한다.
+
+The API consists of the following components that are required to be provided by Reactive Stream implementations:
+
+1. Publisher
+2. Subscriber
+3. Subscription
+4. Processor
+
+A *Publisher* is a provider of a potentially unbounded number of sequenced elements, publishing them according to the demand received from its Subscriber(s).
+
+In response to a call to `Publisher.subscribe(Subscriber)` the possible invocation sequences for methods on the `Subscriber` are given by the following protocol:
+
+```
+onSubscribe onNext* (onError | onComplete)?
+```
+
+This means that `onSubscribe` is always signalled,
+followed by a possibly unbounded number of `onNext` signals (as requested by `Subscriber`) followed by an `onError` signal if there is a failure, or an `onComplete` signal when no more elements are available—all as long as the `Subscription` is not cancelled.
 
 ##### [목차로 이동](#목차)
 
