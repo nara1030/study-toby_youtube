@@ -12,7 +12,7 @@ Reactive Streams
 	* [Iterable](#Iterable)
 	* [Observable](#Observable)
 2. [Observer Pattern](#Observer-Pattern)
-3. .
+3. [Reactive Streams](#Reactive-streams)
 4. [참고](#참고)
 
 ## Duality
@@ -171,7 +171,92 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 1. 완료 개념이 없다(ex. 주식 정보)
 2. 비동기 구현 시 예외 처리에 대한 아이디어가 없다
 
-55:00
+* 예제  
+	```java
+	package toby.live.rs_01;
+
+	import java.util.Arrays;
+	import java.util.Iterator;
+	import java.util.concurrent.Flow.Publisher;
+	import java.util.concurrent.Flow.Subscriber;
+	import java.util.concurrent.Flow.Subscription;
+
+	public class PubSub {
+		public static void main(String[] args) {
+			Iterable<Integer> iter = Arrays.asList(1, 2, 3, 4, 5);
+
+			// Java9
+			Publisher p = new Publisher() {
+				@Override
+				public void subscribe(Subscriber subscriber) {
+					Iterator<Integer> it = iter.iterator();
+
+					subscriber.onSubscribe(new Subscription() {
+						@Override
+						public void request(long n) {
+							while (n-- > 0) {
+								if (it.hasNext()) {
+									subscriber.onNext(it.next());
+								} else {
+									subscriber.onComplete();
+									break;
+								}
+							}
+						}
+
+						@Override
+						public void cancel() {
+
+						}
+					});
+				}
+			};
+
+			Subscriber<Integer> s = new Subscriber<Integer>() {
+				Subscription subscription;
+
+				@Override
+				public void onSubscribe(Subscription subscription) {
+					System.out.println("onSubscribe");
+					this.subscription = subscription;
+					this.subscription.request(1);
+				}
+
+				@Override
+				public void onNext(Integer item) {
+					System.out.println("onNext " + item);
+					this.subscription.request(1);
+				}
+
+				@Override
+				public void onError(Throwable throwable) {
+					System.out.println("onError");
+				}
+
+				@Override
+				public void onComplete() {
+					System.out.println("onComplete");
+				}
+			};
+
+			p.subscribe(s);
+		}
+	}
+	```
+* 실행 결과  
+	<img src="../img/img_01_03.png" width="150" height="180"></br>
+
+
+- - -
+<img src="../img/img_01_02.png" width="350" height="200"></br>
+
+##### [목차로 이동](#목차)
+
+## Reactive Streams
+* [ReactiveX](http://reactivex.io/)
+* [Reactive Streams](http://www.reactive-streams.org/)
+
+스프링이 구현하고 있는 Reactive Web이라는 기술이 Reactive Streams(표준)에 바탕을 두고 있다.
 
 ##### [목차로 이동](#목차)
 
