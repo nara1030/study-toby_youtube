@@ -9,7 +9,7 @@
 
 ## 스프링 리액티브 프로그래밍
 1. [Reactive Streams](https://github.com/nara1030/study-toby_youtube/blob/master/docs/reactive_01.md)
-2. Operator
+2. [Operator](https://github.com/nara1030/study-toby_youtube/blob/master/docs/reactive_02.md)
 3. Schedulers
 4. 자바와 스프링의 비동기 기술
 5. 비동기 RestTemplate과 비동기 MVC/Servlet
