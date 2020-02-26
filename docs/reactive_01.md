@@ -159,7 +159,7 @@ Reactive Streams
 	}
 	```
 
-참고로 실행 결과는 아래와 같다.
+실행 결과는 아래와 같다.
 
 <img src="../img/img_01_01.png" width="300" height="180"></br>
 
@@ -171,7 +171,7 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 1. 완료 개념이 없다(ex. 주식 정보)
 2. 비동기 구현 시 예외 처리에 대한 아이디어가 없다
 
-* 예제  
+* 한 개씩 받는 경우  
 	```java
 	package toby.live.rs_01;
 
@@ -243,12 +243,75 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 		}
 	}
 	```
-* 실행 결과  
-	<img src="../img/img_01_03.png" width="150" height="180"></br>
+* 두 개씩 받는 경우  
+	```java
+	// 이 외에는 위와 상동
+	 Subscriber<Integer> s = new Subscriber<Integer>() {
+		Subscription subscription;
 
+		@Override
+		public void onSubscribe(Subscription subscription) {
+			System.out.println("onSubscribe");
+			this.subscription = subscription;
+			this.subscription.request(2);
+		}
+
+		int bufferSize = 2;
+
+		@Override
+		public void onNext(Integer item) {
+			System.out.println("onNext " + item);
+			if (--bufferSize <= 0) {
+				System.out.println("버퍼: 0");
+				bufferSize = 2;
+				this.subscription.request(2);
+			}
+		}
+
+		@Override
+		public void onError(Throwable throwable) {
+			System.out.println("onError");
+		}
+
+		@Override
+		public void onComplete() {
+			System.out.println("onComplete");
+		}
+	};
+	```
+	* 더 나은 옵저버 패턴인 Observable이 리액티브 프로그래밍의 한 축이라면 또 다른 축인 Scheduler가 비동기/병렬 처리에 좋기 때문에 이렇게 코드를 처리할 필요 없음
+	* 복잡해보이지만 프레임워크의 기초이므로 이렇게 만든 클래스/메소드는 방대함
+
+실행 결과는 아래와 같다.
+
+<img src="../img/img_01_03.png" width="150" height="160"></br>
+
+
+1:30:50
 
 - - -
-<img src="../img/img_01_02.png" width="350" height="200"></br>
+* The Reactive Streams Contract  
+	<img src="../img/img_01_02.png" width="350" height="200"></br>
+* 예외 처리  
+	```java
+	subscriber.onSubscribe(new Subscription() {
+		@Override
+		public void request(long n) {
+			try {
+				while (n-- > 0) {
+					if (it.hasNext()) {
+						subscriber.onNext(it.next());
+					} else {
+						subscriber.onComplete();
+						break;
+					}
+				}
+			} catch(RuntimeException e) {
+				subscriber.onError(e);
+			}
+		}
+	});
+	```
 
 ##### [목차로 이동](#목차)
 
