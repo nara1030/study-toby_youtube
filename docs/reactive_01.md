@@ -284,7 +284,7 @@ Reactive Extension을 처음 만든 MS 엔지니어들은 이러한 옵저버 �
 
 실행 결과는 아래와 같다.
 
-<img src="../img/img_01_03.png" width="150" height="160"></br>
+<img src="../img/img_01_03.png" width="300" height="180"></br>
 
 
 1:30:50
