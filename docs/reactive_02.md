@@ -90,13 +90,13 @@ public class PubSub {
 * JAVA9이 아닌 다른 API(org.reactivestreams) 사용(∴ JAVA8에서도 사용 가능)
 * @Slf4j 사용 위에 Lombok 의존성(compile/annotationProcessor) 및 플러그인 추가
 	* 에러1 → slf4j 및 logback 의존성 추가(build.gradle)  
-		<img src="../img/img_02_01.png" width="500" height="180"></br>
+		<img src="../img/img_02_01.png" width="500" height="170"></br>
 	* 에러2 → `BasicConfigurator.configure();` 추가  
-		<img src="../img/img_02_02.png" width="500" height="200"></br>
+		<img src="../img/img_02_02.png" width="500" height="190"></br>
 
 실행 결과는 아래와 같다.
 
-<img src="../img/img_02_03.png" width="300" height="250"></br>
+<img src="../img/img_02_03.png" width="320" height="250"></br>
 
 하단은 위 코드의 리팩토링이다.
 
