@@ -178,11 +178,11 @@ public class PubSub {
 ## Operator
 ```txt
 Pub → [Data1] → mapPub → [Data2] → logSub
-				← subscribe(logSub)
-				→ onSubscribe(s)
-				→ onNext
-				→ onNext
-				→ onComplete
+		← subscribe(logSub)
+		→ onSubscribe(s)
+		→ onNext
+		→ onNext
+		→ onComplete
 1. map(d1 → f → d2)
 ```
 
