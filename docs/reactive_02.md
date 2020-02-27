@@ -177,11 +177,16 @@ public class PubSub {
 
 ## Operator
 ```txt
-Publisher → [Data1] → Op1 → [Data2] → Op2 → [Data3] → Subscriber
+Pub → [Data1] → mapPub → [Data2] → logSub
+				← subscribe(logSub)
+				→ onSubscribe(s)
+				→ onNext
+				→ onNext
+				→ onComplete
 1. map(d1 → f → d2)
 ```
 
-26:30
+32:40
 
 ##### [목차로 이동](#목차)
 
