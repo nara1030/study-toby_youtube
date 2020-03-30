@@ -14,7 +14,7 @@
 ## Future
 > A Future represents the result of an asynchronous computation.
 
-Future[1]란 비동기적인 작업을 수행하고 난 결과를 나타내는 것이다. 비동기 작업의 수행을 단순하게 설명하면 새로운 스레드에게 작업을 시킨다는 것인데, 그리고 그 스레드에서 작업을 수행한 결과를 가져오는 가장 기본이 되는 인터페이스가 Future라고 할 수 있다. 아래 코드로 설명해본다.
+Future[1]란 비동기적인 작업을 수행하고 난 결과를 나타내는 것이다. 비동기 작업의 수행을 단순하게 설명하면 새로운 스레드에게 작업을 시킨다는 것인데, 이후 그 스레드에서 작업을 수행한 결과를 가져오는 가장 기본이 되는 인터페이스가 Future라고 할 수 있다. 아래 코드로 설명해본다.
 
 ```java
 /*
@@ -50,7 +50,7 @@ log.info("Exit");
 
 실제 실행 결과는 아래와 같이 나온다.
 
-<img src="../img/img_04_02.png" width="500" height="250"></br>
+<img src="../img/img_04_02.png" width="530" height="250"></br>
 
 이번엔 코드를 조금 바꿔서 출력이 아니라 리턴이 되도록 만들어보자.
 
@@ -70,11 +70,11 @@ log.info(f.get());
 log.info("Exit");
 ```
 
-여기서 핵심은 `f.get()`이다. 이 문장은 2초 이전에 실행이 되게 되는데 Future의 값을 사용하기 때문에 결과가 리턴, 즉 비동기 작업이 완료될 때까지 Blocking된 상태가 된다. 따라서 아랫줄로 내려갈 수 없게 되므로 Exit이 맨 마지막에 찍히게 된다(∵ 동일 스레드). 만약 `f.get()`이 없다면 Exit이 먼저 찍히게 된다.
+여기서 핵심은 `f.get()`이다. 이 문장은 2초 이전에 실행이 되게 되는데 Future의 값을 사용하기 때문에 결과가 리턴, 즉 비동기 작업이 완료될 때까지 Blocking된 상태가 된다. 따라서 다음 Statement로 내려갈 수 없게 되므로 Exit이 맨 마지막에 찍히게 된다(∵ 동일 스레드). 만약 `f.get()`이 없다면 Exit이 먼저 찍히게 된다.
 
 한편 위 코드의 `submit` 메소드는 `execute` 메소드와 마찬가지로 Runnable도 인자로 받지만 Result 값을 함께 세팅해줄 수 있고, 이외에도 Callable 인터페이스[3]를 받을 수 있다. 실행 결과는 아래와 같다.
 
-<img src="../img/img_04_03.png" width="500" height="270"></br>
+<img src="../img/img_04_03.png" width="530" height="270"></br>
 
 20:45
 
@@ -83,7 +83,7 @@ log.info("Exit");
 	* 비슷한 기술로 Promise, DeferredResult 등이 있다.
 	* [Spring Web 비동기](http://wonwoo.ml/index.php/post/1912)
 * [2]  
-	<img src="../img/img_04_01.png" width="500" height="250"></br>
+	<img src="../img/img_04_01.png" width="530" height="270"></br>
 	* [설정 방법](https://stackoverflow.com/questions/12532339/no-appenders-could-be-found-for-loggerlog4j)을 좀 헤매서 확인하고 공부 필요
 * [3]
 	* Callable 인터페이스와 Runnable 인터페이스는 자바의 가장 기본이 되는 인터페이스이므로 꼭 기억할 필요
