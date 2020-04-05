@@ -5,6 +5,7 @@
 ## 목차
 1. [스프링 리액티브 프로그래밍](#스프링-리액티브-프로그래밍)
 2. [자바 Generics](#자바-Generics)
+3. [기타](#기타)
 
 
 ## 스프링 리액티브 프로그래밍
@@ -24,5 +25,10 @@
 ## 자바 Generics
 1. Generics
 2. Generics에서 와일드카드 활용법, 람다와 인터섹션 타입을 이용한 동적인 기능확장법
+
+##### [목차로 이동](#목차)
+
+## 기타
+1. [Java 9와 Spring 5로 바라보는 Java의 변화와 도전 - Oracle Code Seoul 2017](https://www.youtube.com/watch?v=BFjrmj4p3_Y)
 
 ##### [목차로 이동](#목차)
