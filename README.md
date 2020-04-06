@@ -30,5 +30,6 @@
 
 ## 기타
 1. [Java 9와 Spring 5로 바라보는 Java의 변화와 도전 - Oracle Code Seoul 2017](https://www.youtube.com/watch?v=BFjrmj4p3_Y)
+2. [Async & Spring - 스프링캠프 2017](https://www.youtube.com/watch?v=HKlUvCv9hvA&feature=youtu.be)
 
 ##### [목차로 이동](#목차)
