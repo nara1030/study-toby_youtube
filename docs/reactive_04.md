@@ -172,5 +172,7 @@ es.shutdown();
 * [CompletableFuture in Java 8, asynnchronous processing done right - Tomasz Nurkiewicz](https://www.youtube.com/watch?v=-MBPQ7NIL_Y)
 * [Concurrency in Java 8: Parallel Streams, CompletableFuture, and All That](https://www.youtube.com/watch?v=x5akmCWgGY0)
 * [함수형 자바스크립트와 동시성 프로그래밍](https://www.youtube.com/watch?v=4sO0aWTd3yc)
+* 강의 리뷰
+	1. [자바와 스프링의 비동기 기술](https://jongmin92.github.io/2019/03/31/Java/java-async-1/)
 
 ##### [목차로 이동](#목차)
